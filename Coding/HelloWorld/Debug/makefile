@@ -59,8 +59,8 @@ all: main-build
 main-build: Hello_World.elf secondary-outputs
 
 # Tool invocations
-Hello_World.elf Hello_World.map: $(OBJS) $(USER_OBJS) G:\Studing\ Embedded\driver-development\Coding\New\ folder\STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Hello_World.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"G:\Studing Embedded\driver-development\Coding\New folder\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Hello_World.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Hello_World.elf Hello_World.map: $(OBJS) $(USER_OBJS) G:\Studing\ Embedded\driver-development\Coding\HelloWorld\STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Hello_World.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"G:\Studing Embedded\driver-development\Coding\HelloWorld\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Hello_World.map" -Wl,--gc-sections -static -specs=rdimon.specs -lc -lrdimon --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
