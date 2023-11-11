@@ -1,0 +1,7 @@
+Clock
+Reference: STM32F407 board.
+----------------------
+Sources:
+1. Crystal Oscillator (External to the MCU) (HSE: High Speed External) speed: 8Mhz (define by board STM32F407)
+2. The RC Oscillator (Internal to the MCU) (HSI: High Speed Internal)
+3. The PLL (Phase Locked Loop) (Internal to the MCU)

@@ -1,0 +1,23 @@
+MCU Bus interface:
+Reference: S23F407
+
+1. System bus is not conected to Flash memory, is it that true?
+-> True, Flash memory only connected to I-Code (instruction code) and D-Code (Data code).
+
+2. Processor can fetch instruction from SRAM over I-code bus T/F?
+-> False
+
+3. System bus can operate at speed upto 180mHz?
+-> True
+
+4. SRAM are conected to system bus?
+-> true, over bus matrix.
+
+5. APB1 bus can operate with speed upto 180mHz?
+->False. only 45mHz
+
+7. Processor can fetch instruction as well as data simultaneously from SRAM T/F?
+->  False. Only 1 bus connected to SRAM
+
+8. Processor can fetch instruction as well as data simultaneously from FLASH T/F?
+->  True. Because have 2 bus are Icode and Dcode
