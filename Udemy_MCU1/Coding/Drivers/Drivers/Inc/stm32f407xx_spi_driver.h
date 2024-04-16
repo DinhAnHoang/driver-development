@@ -25,7 +25,7 @@ typedef struct
 
 typedef struct
 {
-	SPI_RegDef_t *pSPIx; 					/*| this hold the base address of SPIx(x:0,1,2) peripheral 	*/
+	SPI_RegDef_t *pSPIx; 					/*| this hold the base address of FLASH peripheral 	*/
 	SPI_Config_t SPI_Config;				/*| this hold the GPIO pin configuration setting 	*/
 
 }SPI_Handle_t;

@@ -149,7 +149,7 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 		SYSCFG->SYSCFG_EXTICR[ExtiCrReg] |= portcode  << (ExticrVal*4);
 
 		/*3.Enable the EXTI delivery using IMR */
-		EXTI->EMR |= (0x01<< pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+		EXTI->IMR |= (0x01<< pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
 	}
 
 	/*2. Configure speed */
@@ -302,4 +302,96 @@ void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
 {
 	pGPIOx->ODR = pGPIOx->ODR ^ (1<< PinNumber); 		/* ^ == XOR  */
 	/* Other write:  pGPIOx->ODR ^= (1<< PinNumber) 				 */
+}
+
+/*
+ * IRQ Configuration and ISR handling
+ */
+/*****************************************************************
+ * @fn          - GPIO_IRQInterruptConfig
+ *
+ * @brief       - This function configures interrupt
+ *
+ * @param[in]   - IRQ Interrupt number
+ * @param[in]   - Macro: Enable/Disable
+ *
+ * @return      - None
+ *
+ * @Note        - None
+ *
+ *****************************************************************/
+void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi)
+{
+	if(EnorDi == ENABLE){
+		if(IRQNumber <= 31){
+			/*Program ISER0(Interrupt set-enable register) Register  */
+			*NVIC_ISER0 |= (1<<IRQNumber);
+		}
+		else if(IRQNumber > 31 && IRQNumber <=64){
+			/*Program ISER1 Register */
+			*NVIC_ISER1 |= (1<<(IRQNumber % 32));
+		}
+		else if(IRQNumber > 64 && IRQNumber <96){
+			/*Program ISER2 Register */
+			*NVIC_ISER2 |= (1<<(IRQNumber % 64));
+		}
+	}
+	else{
+		if(IRQNumber <= 31){
+			/*Program ICER0(Interrupt clear-enable register) Register  */
+			*NVIC_ICER0 |= (1<<IRQNumber);
+		}
+		else if(IRQNumber > 31 && IRQNumber <=64){
+			*NVIC_ICER1 |= (1<<(IRQNumber % 32));
+		}
+		else if(IRQNumber > 64 && IRQNumber <96){
+			*NVIC_ICER2 |= (1<<(IRQNumber % 64));
+		}
+	}
+}
+
+
+/*****************************************************************
+ * @fn          - GPIO_IRQPriorityConfig
+ *
+ * @brief       - This function configures interrupt priority
+ *
+ * @param[in]   - IRQ Interrupt number
+ * @param[in]   - IRQ interrupt priority
+ *
+ * @return      - None
+ *
+ * @Note        - None
+ *
+ *****************************************************************/
+void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority)
+{
+    uint8_t iprx = IRQNumber / 4;
+    uint8_t iprx_section = IRQNumber % 4;
+
+    uint8_t shift_amount = (8 * iprx_section) + (8 - NO_PR_BITS_IMPLEMENTED);
+    *(NVIC_PR_BASE_ADDR + iprx) |= (IRQPriority << shift_amount);
+}
+
+
+/*****************************************************************
+ * @fn          - GPIO_IRQHandling
+ *
+ * @brief       - This function handle interrupts
+ *
+ * @param[in]   - Pin number
+ *
+ * @return      - None
+ *
+ * @Note        - None
+ *
+ *****************************************************************/
+void GPIO_IRQHandling(uint8_t PinNumber)
+{
+    /* Clear the PR register corresponding to pin number */
+    if(EXTI->PR & (1 << PinNumber))
+    {
+        /* Clear pin */
+        EXTI->PR |= (1 << PinNumber);
+    }
 }

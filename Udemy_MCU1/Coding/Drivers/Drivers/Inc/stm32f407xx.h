@@ -6,15 +6,54 @@
  */
 #include "stm32f407xx_gpio_driver.h"
 #include "stm32f407xx_spi_driver.h"
+#include "stm32f407xx_flash_driver.h"
 #ifndef INC_STM32F407XX_H_
 #define INC_STM32F407XX_H_
 
 
 #define __vio volatile
+
+/*START: PROCESSOR SPECIFIC DETAILS*/
+/*
+ * ARM Cortex Mx Processor NVIC ISERx Register Address
+ *
+ *
+ */
+
+
+#define NVIC_ISER0 ((__vio uint32_t*) 0xE000E100 )
+#define NVIC_ISER1 ((__vio uint32_t*) 0xE000E104 )
+#define NVIC_ISER2 ((__vio uint32_t*) 0xE000E108 )
+#define NVIC_ISER3 ((__vio uint32_t*) 0xE000E10C )
+
+
+
+/*
+ * ARM Cortex Mx Processor NVIC ICERx Register Address
+ *
+ *
+ */
+
+
+#define NVIC_ICER0 				((__vio uint32_t*) 0xE000E180 )
+#define NVIC_ICER1 				((__vio uint32_t*) 0xE000E184 )
+#define NVIC_ICER2 				((__vio uint32_t*) 0xE000E188 )
+#define NVIC_ICER3 				((__vio uint32_t*) 0xE000E18C )
+
+
+/*
+ * ARM Cortex Mx Processor Priority Register Register Address
+ *
+ *
+ */
+#define NVIC_PR_BASE_ADDR 			((__vio uint32_t*) 0xE000E400 )
+
+#define NO_PR_BITS_IMPLEMENTED 				4
 /*
  * Base addresses of Flash and SRAM memories
  *
  */
+
 #define FLASH_BASEADDR  	0x08000000U
 #define SRAM1_BASEADDR		0x20000000U
 #define SRAM2_BASEADDR		0x2001C000U     /*| SRAM1 are 112Kb -> SRAM2_BASEADDR = SRAM1_BASEADDR + 112Kb 				*/
@@ -71,6 +110,8 @@
  * BASE Addresses of peripherals which are hanging on APB2 bus
  *  TODO: Complete for all other peripherals
  */
+
+
 
 
 #define USART1_BASEADDR 	(APB2PERIPH_BASE + 0x1000U)
@@ -206,6 +247,20 @@ typedef struct
 	 uint32_t RESERVED[2];						/*| Address RESERVED  0x18 and 0x1C	*/
 	__vio uint32_t APB1RSTR;					/*| Address offset: 0x20 	*/
 }SYSCFG_RegDef_t;
+
+
+/*----------------- FLASH -----------------*/
+typedef struct
+{
+	__vio uint32_t ACR;							/*| Address offset: 0x00 	*/
+	__vio uint32_t KEYR;							/*| Address offset: 0x04 	*/
+	__vio uint32_t OPTKEYR;							/*| Address offset: 0x08 	*/
+	__vio uint32_t SR;							/*| Address offset: 0x0C 	*/
+	__vio uint32_t CR;						/*| Address offset: 0x10 	*/
+	__vio uint32_t OPTCR;						/*| Address offset: 0x14 	*/
+}FLASH_RegDef_t;
+
+
 /************************************* Peripheral base address definition  ******************************************/
 /*
  * NOTE:  Register of a peripheral are specific to MCU
@@ -334,13 +389,36 @@ typedef struct
 /*
  * IRQ(Interrupt request) Number of STM32F407x MCU
  */
-#define IRQ_NO_EXTI0 					 6
 #define IRQ_NO_EXTI1 					 7
+#define IRQ_NO_EXTI0 					 6
 #define IRQ_NO_EXTI2 					 8
 #define IRQ_NO_EXTI3 					 9
 #define IRQ_NO_EXTI4 					 10
 #define IRQ_NO_EXTI9_5 					 23
 #define IRQ_NO_EXTI15_10 				 40
+
+
+
+/*
+ * Macros for all possible priority levels
+ */
+#define NVIC_IRQ_PRI0       0
+#define NVIC_IRQ_PRI1       1
+#define NVIC_IRQ_PRI2       2
+#define NVIC_IRQ_PRI3       3
+#define NVIC_IRQ_PRI4       4
+#define NVIC_IRQ_PRI5       5
+#define NVIC_IRQ_PRI6       6
+#define NVIC_IRQ_PRI7       7
+#define NVIC_IRQ_PRI8       8
+#define NVIC_IRQ_PRI9       9
+#define NVIC_IRQ_PRI10      10
+#define NVIC_IRQ_PRI11      11
+#define NVIC_IRQ_PRI12      12
+#define NVIC_IRQ_PRI13      13
+#define NVIC_IRQ_PRI14      14
+#define NVIC_IRQ_PRI15      15
+
 
 /***********************************************************
  * SPI register macro
